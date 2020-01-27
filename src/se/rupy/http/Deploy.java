@@ -658,7 +658,7 @@ static class Big implements Stream {
 		    }
 		    //System.out.println(read + " " + total + " " + limit + " " + limit % length);
 		    if(limit % length > 0)
-    		    out.write(data, 0, (int) (limit % length));
+    		    out.write(data, 0, (int) ((limit % length) + 1));
 		    return total;
         }
 	}

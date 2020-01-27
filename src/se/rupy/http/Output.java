@@ -132,7 +132,7 @@ public abstract class Output extends OutputStream implements Event.Block {
 	protected void headers(long length) throws IOException {
 		//System.out.println("headers " + length);
 		//System.out.println(Worker.stack(Thread.currentThread()));
-		
+
 		if (Event.LOG) {
 			if (reply.event().daemon().verbose) {
 				reply.event().log("code " + reply.code(), Event.VERBOSE);
@@ -380,7 +380,7 @@ public abstract class Output extends OutputStream implements Event.Block {
 		public void write(byte[] b, int off, int len) throws IOException {
 			length += len;
 
-			if (fixed) {
+            if (fixed) {
 				wrote(b, off, len);
 				return;
 			}
