@@ -331,7 +331,9 @@ public class Event extends Throwable implements Chain.Link {
 	protected String address() {
 		String remote = query.header("x-forwarded-for");
 
-		if(remote == null) {
+        //System.out.println(remote);
+
+        if(remote == null) {
 			InetSocketAddress address = (InetSocketAddress) channel.socket()
 					.getRemoteSocketAddress();
 
@@ -358,7 +360,9 @@ public class Event extends Throwable implements Chain.Link {
 		reply.cache();
 		reply.modified(stream.date());
 
-		if(query.modified() == 0 || query.modified() < reply.modified()) {
+		String range = query.header("range");
+
+		if(query.modified() == 0 || query.modified() < reply.modified() || range != null) {
 			Daemon.Metric metric = null;
 			
 			if(daemon.host) {
@@ -402,7 +406,23 @@ public class Event extends Throwable implements Chain.Link {
 			*/
 			///*
 			try {
-				Deploy.pipe(stream.input(), reply.output(stream.length()));
+                if(range != null) {
+                    //System.out.println(range);
+                    int equals = range.indexOf("=");
+                    int dash = range.indexOf("-");
+                    long start = Long.parseLong(range.substring(equals + 1, dash));
+                    long stop = stream.length() - 1;
+                    if(!range.endsWith("-"))
+                        stop = Long.parseLong(range.substring(dash + 1, range.length()));
+                    int length = (int) (stop - start);
+                    //System.out.println(start + " " + stop + " " + length);
+                    reply.header("Content-Range", "bytes " + start + "-" + stop + "/" + stream.length());
+                    reply.code("206 Partial Content");
+                    stream.pipe(1024, start, stop, reply.output(length));
+                }
+                else {
+                    Deploy.pipe(stream.input(), reply.output(stream.length()));
+                }
 			}
 			finally {
 				stream.close();

@@ -570,6 +570,7 @@ static class RupyBufferedReader extends BufferedReader {
 
 static class Big implements Stream {
 		File file;
+		private RandomAccessFile raf;
 		private FileInputStream in;
 		private String name;
 		private long date;
@@ -601,7 +602,7 @@ static class Big implements Stream {
 
 			OutputStream out = new FileOutputStream(file);
 
-			pipe(in, out);
+			Deploy.pipe(in, out);
 
 			out.flush();
 			out.close();
@@ -626,7 +627,10 @@ static class Big implements Stream {
 
 		public void close() {
 			try {
-				in.close();
+			    if(in != null)
+    				in.close();
+			    if(raf != null)
+			        raf.close();
 			} catch (IOException e) {}
 		}
 
@@ -637,6 +641,25 @@ static class Big implements Stream {
 		public long date() {
 			return date;
 		}
+
+		public long pipe(int length, long start, long stop, OutputStream out) throws IOException {
+		    raf = new RandomAccessFile(file, "r");
+            raf.seek(start);
+		    byte[] data = new byte[length];
+		    int read = raf.read(data);
+		    long total = 0, limit = stop - start;
+		    total += read;
+		    while (total <= limit) {
+                //System.out.println(read + " " + total + " " + limit);
+                out.write(data, 0, read);
+			    read = raf.read(data);
+			    total += read;
+		    }
+		    //System.out.println(read + " " + total + " " + limit + " " + limit % length);
+		    if(limit % length > 0)
+    		    out.write(data, 0, (int) (limit % length));
+		    return total;
+        }
 	}
 
 	static class Small implements Stream {
@@ -686,6 +709,8 @@ static class Big implements Stream {
 		public String toString() {
 			return name;
 		}
+
+		public long pipe(int length, long start, long stop, OutputStream out) { return 0; }
 	}
 
 	static interface Stream {
@@ -694,6 +719,7 @@ static class Big implements Stream {
 		public void close();
 		public long length();
 		public long date();
+		public long pipe(int length, long start, long stop, OutputStream out) throws IOException;
 	}
 
 	static class Client {

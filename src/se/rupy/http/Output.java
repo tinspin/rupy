@@ -13,7 +13,8 @@ public abstract class Output extends OutputStream implements Event.Block {
 	private final static byte[] close = ("Connection: close" + EOL).getBytes();
 	private final static byte[] alive = ("Connection: keep-alive" + EOL).getBytes();
 	private final static byte[] chunked = ("Transfer-Encoding: chunked" + EOL).getBytes();
-	private final static byte[] stream = ("Content-Type: text/event-stream" + EOL).getBytes(); 
+	private final static byte[] stream = ("Content-Type: text/event-stream" + EOL).getBytes();
+    private final static byte[] bytes = ("Accept-Ranges: bytes" + EOL).getBytes();
 
 	private byte[] one = new byte[1];
 	protected int length, size;
@@ -147,6 +148,7 @@ public abstract class Output extends OutputStream implements Event.Block {
 		
 		if (length > -1) {
 			wrote(("Content-Length: " + length + EOL).getBytes());
+			wrote(bytes);
 		} else {
 			wrote(chunked);
 		}
@@ -168,8 +170,8 @@ public abstract class Output extends OutputStream implements Event.Block {
 			}
 
 			if(reply.modified() > 0) {
-				wrote(("Last-Modified: " + reply.event().worker().date().format(new Date(reply.modified())) + EOL).getBytes());
-			}
+                wrote(("Last-Modified: " + reply.event().worker().date().format(new Date(reply.modified())) + EOL).getBytes());
+            }
 
 			if(reply.cached() && reply.event().daemon().properties.getProperty("live") != null) {
 				/* Ok, so if you use javascript to set the source of an image to animate a sprite some browsers will 
@@ -177,7 +179,7 @@ public abstract class Output extends OutputStream implements Event.Block {
 				 * canvas and the only solution around this bug is to inline the images with base64.
 				 */
 				//wrote(("Expires: " + reply.event().worker().date().format(new Date(System.currentTimeMillis() + reply.event().daemon().cache * 1000)) + EOL).getBytes());
-				wrote(("Cache-Control: public, max-age=" + reply.event().daemon().cache + ", immutable" + EOL).getBytes());
+				//wrote(("Cache-Control: public, max-age=" + reply.event().daemon().cache + ", immutable" + EOL).getBytes());
 			}
 
 			if(reply.event().session() != null && !reply.event().session().set()) {
