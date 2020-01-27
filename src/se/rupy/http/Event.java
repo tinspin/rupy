@@ -414,11 +414,16 @@ public class Event extends Throwable implements Chain.Link {
                     long stop = stream.length() - 1;
                     if(!range.endsWith("-"))
                         stop = Long.parseLong(range.substring(dash + 1, range.length()));
+                    if(start == stop) { // Chrome is so buggy.
+                        reply.code("400 Bad Request");
+                        reply.output().print(warn("Range '" + encode(range) + "' not valid."));
+                        return true;
+                    }
                     long length = stop - start;
                     //System.out.println(start + " " + stop + " " + length);
                     reply.header("Content-Range", "bytes " + start + "-" + stop + "/" + stream.length());
                     reply.code("206 Partial Content");
-                    stream.pipe(1024, start, stop, reply.output(length));
+                    stream.pipe(1024, start, stop, reply.output(length), this);
                 }
                 else {
                     Deploy.pipe(stream.input(), reply.output(stream.length()));

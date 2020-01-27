@@ -642,7 +642,7 @@ static class Big implements Stream {
 			return date;
 		}
 
-		public long pipe(int length, long start, long stop, OutputStream out) throws IOException {
+		public long pipe(int length, long start, long stop, OutputStream out, Event event) throws IOException {
 		    raf = new RandomAccessFile(file, "r");
             raf.seek(start);
 		    byte[] data = new byte[length];
@@ -654,6 +654,7 @@ static class Big implements Stream {
                 out.write(data, 0, read);
 			    read = raf.read(data);
 			    total += read;
+			    event.touch();
 		    }
 		    //System.out.println(read + " " + total + " " + limit + " " + limit % length);
 		    if(limit % length > 0)
@@ -710,7 +711,7 @@ static class Big implements Stream {
 			return name;
 		}
 
-		public long pipe(int length, long start, long stop, OutputStream out) { return 0; }
+		public long pipe(int length, long start, long stop, OutputStream out, Event event) { return 0; }
 	}
 
 	static interface Stream {
@@ -719,7 +720,7 @@ static class Big implements Stream {
 		public void close();
 		public long length();
 		public long date();
-		public long pipe(int length, long start, long stop, OutputStream out) throws IOException;
+		public long pipe(int length, long start, long stop, OutputStream out, Event event) throws IOException;
 	}
 
 	static class Client {
