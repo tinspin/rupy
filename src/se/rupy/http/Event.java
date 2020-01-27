@@ -414,7 +414,7 @@ public class Event extends Throwable implements Chain.Link {
                     long stop = stream.length() - 1;
                     if(!range.endsWith("-"))
                         stop = Long.parseLong(range.substring(dash + 1, range.length()));
-                    int length = (int) (stop - start);
+                    long length = stop - start;
                     //System.out.println(start + " " + stop + " " + length);
                     reply.header("Content-Range", "bytes " + start + "-" + stop + "/" + stream.length());
                     reply.code("206 Partial Content");
