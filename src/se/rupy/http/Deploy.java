@@ -649,12 +649,14 @@ static class Big implements Stream {
 		    int read = raf.read(data);
 		    long total = 0, limit = stop - start;
 		    total += read;
-		    while (total <= limit) {
+		    while (total <= limit && read > 0) {
+                //System.out.println(read + " " + total + " " + limit);
                 out.write(data, 0, read);
 			    read = raf.read(data);
 			    total += read;
 			    event.touch();
 		    }
+		    //System.out.println(read + " " + total + " " + limit + " " + limit % length);
 		    if(limit % length > 0)
     		    out.write(data, 0, (int) ((limit % length) + 1));
 		    return total;
