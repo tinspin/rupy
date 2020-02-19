@@ -88,9 +88,9 @@ public class User extends Service {
 		out.println("  function sign(e) {");
 		out.println("    e = e || window.event;");
 		out.println("    var unicode = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;");
-		out.println("    var s = String.fromCharCode(unicode);");
-		out.println("    if(!e.shiftKey)");
-		out.println("      s = s.toLowerCase();");
+		out.println("    var s = String.fromCharCode(e.target.value.charAt(e.target.selectionStart - 1).charCodeAt());");
+		//out.println("    if(!e.shiftKey)");
+		//out.println("      s = s.toLowerCase();");
 		out.println("    if(unicode == 13) {");
 		out.println("      hash('sign');");
 		out.println("    }");
@@ -181,7 +181,7 @@ public class User extends Service {
 		out.println("<tr>");
 		out.println("<form action=\"user\" method=\"post\" name=\"user\"><input type=\"hidden\" name=\"salt\" id=\"salt\" value=\"" + salt + "\"><input type=\"hidden\" name=\"pass\" id=\"pass\" value=\"\"><input type=\"hidden\" name=\"url\" value=\"" + url + "\">");
 		out.println("<td><font color=\"#00cc33\"><i>name</i></font>&nbsp;</td><td><input type=\"text\" style=\"width: 100px;\" name=\"name\" id=\"name\" value=\"" + name + "\"></td></tr>");
-		out.println("<tr><td><font color=\"#00cc33\"><i>pass</i></font>&nbsp;</td><td><input type=\"text\" style=\"width: 100px;\" name=\"hide\" id=\"hide\" onkeydown=\"return sign(event);\"></td></tr>");
+		out.println("<tr><td><font color=\"#00cc33\"><i>pass</i></font>&nbsp;</td><td><input type=\"text\" style=\"width: 100px;\" name=\"hide\" id=\"hide\" onkeyup=\"return sign(event);\"></td></tr>");
 		//out.println("<tr><td><font color=\"#00cc33\"><i>mail*</i></font></td><td><input type=\"text\" style=\"width: 100px;\" name=\"mail\" value=\"" + mail + "\" onkeypress=\"join(event);\"></td></tr>");
 		out.println("<tr><td></td><td><a href=\"javascript:hash('sign');\">login</a>&nbsp;<a href=\"javascript:hash('join');\"><font color=\"#ff9900\">register</font></a></td></tr>");
 		//out.println("<tr><td></td><td><font color=\"#ff9900\"><i>*optional</i></font></td></tr>");
