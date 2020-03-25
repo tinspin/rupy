@@ -89,8 +89,11 @@ public class User extends Service {
 		out.println("    e = e || window.event;");
 		out.println("    var unicode = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;");
 		out.println("    var s = String.fromCharCode(e.target.value.charAt(e.target.selectionStart - 1).charCodeAt());");
-		//out.println("    if(!e.shiftKey)");
-		//out.println("      s = s.toLowerCase();");
+		out.println("    if(navigator.userAgent.indexOf('Android') == -1) {");
+        out.println("      s = String.fromCharCode(unicode);");
+        out.println("      if(!e.shiftKey)");
+        out.println("        s = s.toLowerCase();");
+        out.println("    }");
 		out.println("    if(unicode == 13) {");
 		out.println("      hash('sign');");
 		out.println("    }");
