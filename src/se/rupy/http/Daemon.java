@@ -471,6 +471,12 @@ public class Daemon implements Runnable {
 		//t.printStackTrace();
 
 		if(error != null && t != null && !(t instanceof Failure.Close)) {
+		    if(t.getCause() instanceof Failure.Timeout) {
+		        Failure.Timeout ft = (Failure.Timeout) t.getCause();
+
+		        if(!ft.log)
+		            return;
+            }
 			if(err != null) {
 				try {
 					Boolean log = (Boolean) AccessController.doPrivileged(new PrivilegedExceptionAction() {

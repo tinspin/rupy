@@ -421,7 +421,19 @@ public class Event extends Throwable implements Chain.Link {
                     long length = stop - start;
                     reply.header("Content-Range", "bytes " + start + "-" + stop + "/" + stream.length());
                     reply.code("206 Partial Content");
-                    stream.pipe(4096, start, stop, reply.output(length), this);
+
+                    //try {
+                        stream.pipe(4096, start, stop, reply.output(length), this);
+                    /*} // This is handled in the logging instead,
+                    // I want rupy to escalate this properly so
+                    //the browser knows it needs to reconnect.
+                    catch(Failure f) {
+                        if(f.getCause() instanceof Failure.Timout) {
+                            Failure.Timout t = (Failure.Timout) f.getCause();
+                            System.out.println("OK " + t.log);
+                            if(t.log) throw t;
+                        }
+                    }*/
                 }
                 else {
                     Deploy.pipe(stream.input(), reply.output(stream.length()));
@@ -575,14 +587,21 @@ public class Event extends Throwable implements Chain.Link {
 			long delay = daemon.delay - (max - System.currentTimeMillis());
 
 			if(available > 0) {
-				if(Event.LOG) {
-					log("delay " + delay + " " + available, VERBOSE);
-				}
+                if (Event.LOG) {
+                    log("delay " + delay + " " + available, VERBOSE);
+                }
 
-				return available;
-			}
+                return available;
+            }
 
 			if(delay > 100) {
+			    // We don't want 206 to wait as it is most likely wasting resources.
+                // We also swallow the logging of 206 Timouts!
+                if(reply.code().startsWith("206")) {
+                    String agent = query.header("user-agent");
+                    throw new Failure.Timeout("206 Drop. (" + agent + ")", false);
+                }
+
 				/*
 				 * Increase socket buffer.
 				 * For really old client computers and slow 
@@ -624,7 +643,8 @@ public class Event extends Throwable implements Chain.Link {
 
 		String agent = query.header("user-agent");
 
-		throw new Exception("IO timeout. (" + interest + ", " + daemon.delay + ", " + agent + ")");
+		//throw new Exception("IO timeout. (" + interest + ", " + daemon.delay + ", " + agent + ")");
+        throw new Failure.Timeout("IO Lag. (" + interest + ", " + daemon.delay + ", " + agent + ")", true);
 	}
 
 	/**

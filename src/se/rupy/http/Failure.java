@@ -51,4 +51,22 @@ public class Failure extends IOException {
 			super(message);
 		}
 	}
+
+	/**
+	 * When a client is not purging the TCP pipeline,
+     * either because it is lagging/buffering (old
+     * modems or satellite f.ex.) the NIO Async.
+     * pipeline can't wait because we have fever
+     * shared threads to avoid context switching
+     * choke. 206 f.ex. should not wait or warn
+     * about this!
+	 * @author Marc
+	 */
+	static class Timeout extends IOException { // made this an Exception to not break old code! :S
+        public boolean log; // Don't log if Partial Content!
+		public Timeout() {}
+		public Timeout(String message, boolean log) {
+			super(message); this.log = log;
+		}
+	}
 }
