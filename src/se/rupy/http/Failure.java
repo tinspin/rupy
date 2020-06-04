@@ -36,14 +36,13 @@ public class Failure extends IOException {
 			root = t;
 		}
 
-		protected  Throwable getRoot() {
+		protected Throwable getRoot() {
 			return root;
 		}
 	}
 	
 	/**
 	 * To close the event without logging to error.txt.
-	 * @author Marc
 	 */
 	static class Close extends IOException {
 		public Close() {}
@@ -60,9 +59,8 @@ public class Failure extends IOException {
      * shared threads to avoid context switching
      * choke. 206 f.ex. should not wait or warn
      * about this!
-	 * @author Marc
 	 */
-	static class Timeout extends IOException { // made this an Exception to not break old code! :S
+	static class Timeout extends IOException {
         public boolean log; // Don't log if Partial Content!
 		public Timeout() {}
 		public Timeout(String message, boolean log) {

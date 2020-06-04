@@ -421,19 +421,7 @@ public class Event extends Throwable implements Chain.Link {
                     long length = stop - start;
                     reply.header("Content-Range", "bytes " + start + "-" + stop + "/" + stream.length());
                     reply.code("206 Partial Content");
-
-                    //try {
-                        stream.pipe(4096, start, stop, reply.output(length), this);
-                    /*} // This is handled in the logging instead,
-                    // I want rupy to escalate this properly so
-                    //the browser knows it needs to reconnect.
-                    catch(Failure f) {
-                        if(f.getCause() instanceof Failure.Timout) {
-                            Failure.Timout t = (Failure.Timout) f.getCause();
-                            System.out.println("OK " + t.log);
-                            if(t.log) throw t;
-                        }
-                    }*/
+                    stream.pipe(4096, start, stop, reply.output(length), this);
                 }
                 else {
                     Deploy.pipe(stream.input(), reply.output(stream.length()));
@@ -594,14 +582,15 @@ public class Event extends Throwable implements Chain.Link {
                 return available;
             }
 
-			if(delay > 100) {
-			    // We don't want 206 to wait as it is most likely wasting resources.
-                // We also swallow the logging of 206 Timouts!
-                if(reply.code().startsWith("206")) {
-                    String agent = query.header("user-agent");
-                    throw new Failure.Timeout("206 Drop. (" + agent + ")", false);
-                }
+            // We don't want 206 to wait as it is most likely wasting our limited thread resources.
+            // We also swallow the logging of 206 Timouts!
+            if(delay > 20 && reply.code().startsWith("206") && reply.type().equals("video/mp4")) {
+                String agent = query.header("user-agent");
+                //System.out.println(206);
+                throw new Failure.Timeout("206 Drop. (" + agent + ")", false);
+            }
 
+			if(delay > 100) {
 				/*
 				 * Increase socket buffer.
 				 * For really old client computers and slow 
