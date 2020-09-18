@@ -202,6 +202,9 @@ public class Query extends Hash {
 					value = equ.length() > pos + 1 ? URLDecoder.decode(equ.substring(pos + 1), "UTF-8") : "";
 				}
 
+				// TODO: this should check if the key is allready present
+                // Because then you should probably not overwrite it!?
+                // I wonder how this is handled by other HTTP servers!?
 				put(key, value);
 			}
 		}

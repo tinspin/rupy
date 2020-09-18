@@ -296,13 +296,7 @@ public class Event extends Throwable implements Chain.Link {
 	}
 
 	/**
-	 * HTML encodes value to avoid XSS attacks.
-	 * & = &amp;
-	 * < = &lt;
-	 * > = &gt;
-	 * " = &quot;
-	 * ' = &#x27;
-	 * / = &#x2F;
+	 * HTML encodes.
 	 */
 	public static String encode(String value) {
 		value = value.replace("&", "&amp;");
@@ -327,6 +321,32 @@ public class Event extends Throwable implements Chain.Link {
 		value = value.replace("\t", "\\t");
 		return value;
 	}
+
+    /**
+     * URL encodes.
+     */
+	public static String percent(String value) {
+		value = value.replace("%", "%25");
+        value = value.replace("!", "%21");
+		value = value.replace("#", "%23");
+		value = value.replace("$", "%24");
+		value = value.replace("&", "%26");
+		value = value.replace("'", "%27");
+		value = value.replace("(", "%28");
+		value = value.replace(")", "%29");
+		value = value.replace("*", "%2A");
+		value = value.replace("+", "%2B");
+		value = value.replace(",", "%2C");
+		value = value.replace("/", "%2F");
+		value = value.replace(":", "%3A");
+		value = value.replace(";", "%3B");
+		value = value.replace("=", "%3D");
+		value = value.replace("?", "%3F");
+		value = value.replace("@", "%40");
+		value = value.replace("[", "%5B");
+		value = value.replace("]", "%5D");
+		return value;
+    }
 	
 	protected String address() {
 		String remote = query.header("x-forwarded-for");
