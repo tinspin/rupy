@@ -1,4 +1,4 @@
-![http://host.rupy.se](http://talk.binarytask.com/logo.png)
+![http://host.rupy.se](https://raw.githubusercontent.com/tinspin/rupy/cb753ef811d50b272ef7c1f07da715b42f3a2d0b/res/logo.svg)
 
 Read the <a href="https://github.com/tinspin/rupy/wiki">wiki</a> or <a href="https://github.com/tinspin/rupy/blob/master/readme.txt">readme.txt</a> for more info.
 
