@@ -4,7 +4,7 @@ INTRODUCTION:
     in Java without forcing me or the CPU to work 
     slowly.
 
-LICENSE: LGPL
+LICENSE: LAGPL (Add Affero parts to LGPL)
 
 RUN:
 

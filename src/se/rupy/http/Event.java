@@ -604,7 +604,7 @@ public class Event extends Throwable implements Chain.Link {
 
             // We don't want 206 to wait as it is most likely wasting our limited thread resources.
             // We also swallow the logging of 206 Timouts!
-            if(delay > 20 && reply.code().startsWith("206") && reply.type().equals("video/mp4")) {
+            if(delay > 200 && reply.code().startsWith("206") && reply.type().equals("video/mp4")) {
                 String agent = query.header("user-agent");
                 //System.out.println(206);
                 throw new Failure.Timeout("206 Drop. (" + agent + ")", false);
