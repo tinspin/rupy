@@ -148,7 +148,9 @@ public abstract class Output extends OutputStream implements Event.Block {
 		
 		if (length > -1) {
 			wrote(("Content-Length: " + length + EOL).getBytes());
-			wrote(bytes);
+
+			if(!reply.event().headless)
+			    wrote(bytes);
 		} else {
 			wrote(chunked);
 		}
