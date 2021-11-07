@@ -150,6 +150,8 @@ public abstract class Output extends OutputStream implements Event.Block {
 			wrote(("Content-Length: " + length + EOL).getBytes());
 
 			if(!reply.event().headless)
+               //!reply.event().query().path().equals("/upload") &&
+               //!reply.event().query().path().equals("/favicon.ico"))
 			    wrote(bytes);
 		} else {
 			wrote(chunked);

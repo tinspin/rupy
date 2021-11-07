@@ -33,7 +33,7 @@ public class Worker implements Runnable, Chain.Link {
 
 		chunk = new byte[daemon.size + Output.Chunked.OFFSET + 2];
 
-		date = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.US);
+		date = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.US);
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
 		
 		log = new SimpleDateFormat("yy-MM-dd HH:mm:ss.SSS");

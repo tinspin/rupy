@@ -1695,8 +1695,14 @@ public class Daemon implements Runnable {
 				Service debug = new Service() {
 					public String path() { return "/debug"; }
 					public void filter(Event event) throws Event, Exception {
-						if(client != null)
-							event.output().print(client.debug());
+						if(client != null) {
+                            event.query().parse();
+                            if (event.string("code").equals("crawler")) {
+                                event.output().print(client.debug());
+                            } else {
+                                event.output().print("You need to prove you are not a crawler.");
+                            }
+                        }
 						else
 							event.output().print("Async client not started yet.");
 					}

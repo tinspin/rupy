@@ -1427,10 +1427,16 @@ public class Root extends Service {
 						if(file.exists()) {
 							JSONObject obj = new JSONObject(file(file));
 
+							if(head.equals("user"))
+							    obj.remove("pass");
+
 							if(remove) {
 								obj.put("id", hash(obj.getString("key")));
 								obj.remove("key");
 							}
+
+							if(!obj.has("date"))
+								obj.put("date", file.lastModified());
 
 							writeObject(event, obj);
 						}
@@ -1523,8 +1529,8 @@ public class Root extends Service {
 							obj.remove("key");
 						}
 
-						//if(type.equals("user"))
-						//	obj.remove("pass");
+						if(type.equals("user"))
+							obj.remove("pass");
 
 						builder.append(obj.toString(4));
 					}
