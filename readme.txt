@@ -4,8 +4,8 @@ INTRODUCTION:
     in Java without forcing me or the CPU to work 
     slowly.
 
-LICENSE: LAGPL (Add Affero parts to LGPL = If you use
-rupy commercially on a server you need to contribute
+LICENSE: Hybrid ALGPL (Add Affero parts to LGPL = If
+you use rupy commercially on a server you need to contribute
 your source changes openly.)
 
 RUN:
