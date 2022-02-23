@@ -284,8 +284,8 @@ public class User extends Service {
 				final String pass = event.string("pass");
 				String host = event.string("host");
 
-				if(name.length() < 3) {
-					event.query().put("fail", "name too short");
+				if(name.length() < 2) {
+					event.query().put("fail", "name too short (2)");
 					redirect(event);
 				}
 
@@ -388,10 +388,28 @@ public class User extends Service {
 				else {
 					String mail = event.string("mail").toLowerCase();
 
-					if(name.length() > 12) {
-						event.query().put("fail", "name too long");
+					/* The distributed name service I'm building
+				     * is going to use 5-bit letters so to fit inside
+				     * an integer we can only have 6 letters.
+				     * o = 0
+				     * i = 1
+				     * x and z removed
+				     * oi23456789abcdefghjklmnpqrstuvwy
+				     */
+					if(name.length() > 6) {
+						event.query().put("fail", "name too long (6)");
 						redirect(event);
 					}
+
+					if(!name.matches("[a-wyA-wy2-9]+")) {
+					    event.query().put("fail", "name invalid (a-wy/2-9)");
+					    redirect(event);
+                    }
+
+				    if(name.matches("[0-9]+")) {
+					    event.query().put("fail", "name alpha missing"); // [0-9]+ reserved for <id>
+					    redirect(event);
+                    }
 
 					if(mail.length() > 0 && mail.indexOf("@") == -1) {
 						event.query().put("fail", "mail @ missing");
