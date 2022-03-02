@@ -401,7 +401,7 @@ public class User extends Service {
 						redirect(event);
 					}
 
-					if(!name.matches("[a-wyA-wy2-9]+")) {
+					if(!name.matches("[a-wyA-WY2-9]+")) {
 					    event.query().put("fail", "name invalid (a-wy/2-9)");
 					    redirect(event);
                     }
