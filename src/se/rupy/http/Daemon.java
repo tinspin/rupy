@@ -1056,7 +1056,11 @@ public class Daemon implements Runnable {
 				try {
 					byte[] data = new byte[512];
 					DatagramPacket packet = new DatagramPacket(data, data.length);
-					dns_socket = new DatagramSocket(53);
+
+					if(bind == null)
+    					dns_socket = new DatagramSocket(53);
+                    else
+                        dns_socket = new DatagramSocket(new InetSocketAddress(bind, 53));
 
 					while(true) {
 						dns_socket.receive(packet);
