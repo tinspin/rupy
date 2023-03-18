@@ -98,6 +98,8 @@ public class Daemon implements Runnable {
 		}
 	}
 
+	public String bind() { return bind == null ? "localhost" : bind; }
+
 	public String domain() {
 		return domain;
 	}
@@ -328,7 +330,17 @@ public class Daemon implements Runnable {
 	 */
 	public Daemon(Properties properties) {
 		this.properties = properties;
-
+/*
+        try {
+            System.out.println(ClassLoader.getSystemClassLoader().loadClass("java.io.FileOutputStream"));
+            System.out.println(ClassLoader.getSystemClassLoader().loadClass("java.io.BufferedReader"));
+            //System.out.println(ClassLoader.getSystemClassLoader().loadClass("java/io/FileOutputStream"));
+            //System.out.println(ClassLoader.getSystemClassLoader().loadClass("java/io/BufferedReader"));
+        }
+        catch(ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+*/
 		threads = Integer.parseInt(properties.getProperty("threads", "5"));
 		cookie = Integer.parseInt(properties.getProperty("cookie", "4"));
 		port = Integer.parseInt(properties.getProperty("port", "8000"));

@@ -357,6 +357,9 @@ public class Deploy extends Service {
 				try {
 					instantiate(small, daemon, old);
 				}
+				//catch(NoClassDefFoundError e) {
+
+                //}
 				catch(Exception e) {
 					if(event == null)
 						e.printStackTrace();
@@ -372,19 +375,40 @@ public class Deploy extends Service {
 		}
 /*
         public Class loadClass(String name) throws ClassNotFoundException {
-            ClassLoader loader = Thread.currentThread().getContextClassLoader();
+            ClassLoader loader = null;
+
+		    try {
+                loader = Thread.currentThread().getContextClassLoader();
+            }
+            catch(Throwable t) {
+		        t.printStackTrace();
+            }
 
 		    if(loader instanceof Deploy.Archive) {
-                if (name.equals("java.io.FileOutputStream")) {
-                    return Class.forName("se.rupy.http.Deploy$RupyFileOutputStream");
-                }
+		        try {
+                    if (name.equals("java.io.FileOutputStream")) {
+                        System.out.println("### FileOutputStream " + loader + " " + name);
+                        return Class.forName("se.rupy.http.Deploy$RupyFileOutputStream");
+                    }
 
-                if (name.equals("java.io.BufferedReader")) {
-                    return Class.forName("se.rupy.http.Deploy$RupyBufferedReader");
+                    if (name.equals("java.io.BufferedReader")) {
+                        System.out.println("### BufferedReader" + loader + " " + name);
+                        return Class.forName("se.rupy.http.Deploy$RupyBufferedReader");
+                    }
+                }
+                catch(Throwable t) {
+                    t.printStackTrace();
                 }
             }
 
-            return super.loadClass(name);
+            try {
+                return super.loadClass(name);
+            }
+            catch(Throwable t) {
+		        t.printStackTrace();
+            }
+
+            return null;
         }
 */
 		protected Class findClass(String name) throws ClassNotFoundException {
@@ -433,6 +457,11 @@ public class Deploy extends Service {
 								try {
 									return (Service) small.clazz.newInstance();
 								}
+								catch(NoClassDefFoundError e) {
+								    e.printStackTrace();
+								    throw (Exception) new Exception().initCause(e);
+								    //return (Service) ClassLoader.getSystemClassLoader().loadClass(small.class.name);
+                                }
 								catch(Throwable t) {
 									throw (Exception) new Exception().initCause(t);
 								}
@@ -515,6 +544,10 @@ public class Deploy extends Service {
 static class RupyFileOutputStream extends FileOutputStream {
     int count;
 
+    public RupyFileOutputStream() throws FileNotFoundException {
+        this((File) null);
+    }
+
     public RupyFileOutputStream(File file) throws FileNotFoundException {
         super(file);
     }
@@ -540,6 +573,10 @@ static class RupyFileOutputStream extends FileOutputStream {
 
 static class RupyBufferedReader extends BufferedReader {
     int count;
+
+    public RupyBufferedReader() {
+        this((Reader) null);
+    }
 
     public RupyBufferedReader(Reader reader) {
         super(reader);
