@@ -393,19 +393,34 @@ public class User extends Service {
 				     * an integer we can only have 6 letters.
 				     * o = 0
 				     * i = 1
-				     * x and z removed
-				     * oi23456789abcdefghjklmnpqrstuvwy
+				     * j, x and z removed
+				     * oi23456789abcdefghklmnpqrstuvwy
 				     */
+					if(!name.matches("[a-wyA-WY2-9]+")) {
+						event.query().put("fail", "name invalid (a-wy/2-9)");
+						redirect(event);
+					}
+
+					if(name.length() < 2) {
+						event.query().put("fail", "name too short (2)");
+						redirect(event);
+					}
+
 					if(name.length() > 6) {
 						event.query().put("fail", "name too long (6)");
 						redirect(event);
 					}
+/*
+					if(pass.length() < 3) {
+						event.query().put("fail", "pass too short (3)");
+						redirect(event);
+					}
 
-					if(!name.matches("[a-wyA-WY2-9]+")) {
-					    event.query().put("fail", "name invalid (a-wy/2-9)");
-					    redirect(event);
-                    }
-
+					if(pass.length() > 9) {
+						event.query().put("fail", "pass too long (9)");
+						redirect(event);
+					}
+*/
 				    if(name.matches("[0-9]+")) {
 					    event.query().put("fail", "name alpha missing"); // [0-9]+ reserved for <id>
 					    redirect(event);
