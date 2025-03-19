@@ -381,8 +381,10 @@ public class Event extends Throwable implements Chain.Link {
 		reply.modified(stream.date());
 
 		String range = query.header("range");
+		//if(range == null && type.equals("video/mp4")) range = "bytes=0-1000000";
+		//System.out.println(range + " " + type);
 
-		if(query.modified() == 0 || query.modified() < reply.modified() || range != null) {
+		if(query.modified() == 0 || query.modified() < reply.modified() || range != null) { // TODO WTF
 			Daemon.Metric metric = null;
 			
 			if(daemon.host) {
@@ -431,6 +433,7 @@ public class Event extends Throwable implements Chain.Link {
                     int dash = range.indexOf("-");
                     long start = Long.parseLong(range.substring(equals + 1, dash));
                     long stop = stream.length() - 1;
+					//long stop = start + 1000000;
                     if(!range.endsWith("-"))
                         stop = Long.parseLong(range.substring(dash + 1, range.length()));
                     if(start == stop) {
@@ -441,7 +444,10 @@ public class Event extends Throwable implements Chain.Link {
                     long length = stop - start;
                     reply.header("Content-Range", "bytes " + start + "-" + stop + "/" + stream.length());
                     reply.code("206 Partial Content");
-                    stream.pipe(4096, start, stop, reply.output(length), this);
+
+					//System.out.println("bytes " + start + "-" + stop + "/" + stream.length());
+
+					stream.pipe(4096, start, stop, reply.output(length), this);
                 }
                 else {
                     Deploy.pipe(stream.input(), reply.output(stream.length()));

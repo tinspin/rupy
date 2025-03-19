@@ -60,7 +60,7 @@ public class Root extends Service {
 
 	//static String root = "/";
 	static Deploy.Archive archive;
-	static URLDecoder decoder = new URLDecoder();
+	//static URLDecoder decoder = new URLDecoder();
 
 	// <!-- start http.Root
 	static String secret;
@@ -270,7 +270,7 @@ public class Root extends Service {
 					}
 					else {
 						key = equ.substring(0, pos);
-						value = equ.length() > pos + 1 ? decoder.decode(equ.substring(pos + 1), "UTF-8") : "";
+						value = equ.length() > pos + 1 ? URLDecoder.decode(equ.substring(pos + 1), "UTF-8") : "";
 					}
 
 					if(key.equals("type"))
@@ -1373,7 +1373,7 @@ public class Root extends Service {
 				else { // node
 					full = home() + "/node/" + head + "/" + tail + "/" + last;
 
-					String decoded = decoder.decode(last, "UTF-8");
+					String decoded = URLDecoder.decode(last, "UTF-8");
 
 					if(tail.equals("word")) { // full word search
 						full = home() + "/node/" + head + "/" + tail + "/";

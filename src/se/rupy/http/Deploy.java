@@ -240,10 +240,11 @@ public class Deploy extends Service {
 			permissions.add(new FilePermission("-", "write"));
 			permissions.add(new FilePermission("-", "delete"));
 			permissions.add(new PropertyPermission("user.dir", "read"));
+			permissions.add(new RuntimePermission("setFactory"));
 			permissions.add(new RuntimePermission("createClassLoader"));
 			permissions.add(new RuntimePermission("setContextClassLoader"));
 			permissions.add(new SecurityPermission("insertProvider.SunJSSE"));
-			
+
 			access = new AccessControlContext(new ProtectionDomain[] {
 					new ProtectionDomain(null, permissions)});
 
@@ -1048,6 +1049,7 @@ static class Big implements Stream {
 				//Async client = new Async();
 				//client.start(1);
 				//deploy(client, args[0], new File(args[1]), args[2], false);
+				//System.out.println(args[0] + " " + args[1] + " " + args[2]);
 				deploy(args[0], new File(args[1]), args[2], false); // TODO: return after local deploy works.
 			} catch (ConnectException ce) {
 				System.out
