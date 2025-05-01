@@ -5,7 +5,7 @@ Read the <a href="https://github.com/tinspin/rupy/wiki">wiki</a> or <a href="htt
 
 The latest build can be found here: <a href="http://rupy.se/rupy.zip">rupy.zip</a>.
 
-Older releases can be found here: <a href="http://rupy.googlecode.com">GoogleCode</a>.
+Older releases can be found here: <a href="https://code.google.com/archive/p/rupy/downloads">GoogleCode</a>.
 
 Next release (Cloud 1.3) will be added to github once it is ready.
 
