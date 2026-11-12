@@ -390,24 +390,25 @@ public class User extends Service {
 
 					/* The distributed name service I'm building
 				     * is going to use 5-bit letters so to fit inside
-				     * an integer we can only have 6 letters.
-				     * o = 0
-				     * i = 1
-				     * j, x and z removed
-				     * oi23456789abcdefghklmnpqrstuvwy
+				     * 2 integers we can only have 12 letters.
+				     * 0 = o
+				     * 1 = i
+				     * x = 8
+				     * z = 2
+				     * oi23456789 abcdefghjk lmnpqrstuv wy
 				     */
 					if(!name.matches("[a-wyA-WY2-9]+")) {
 						event.query().put("fail", "name invalid (a-wy/2-9)");
 						redirect(event);
 					}
 
-					if(name.length() < 2) {
-						event.query().put("fail", "name too short (2)");
+					if(name.length() < 2) { // folders are 1 character so
+						event.query().put("fail", "name too short (<2)");
 						redirect(event);
 					}
 
-					if(name.length() > 6) {
-						event.query().put("fail", "name too long (6)");
+					if(name.length() > 12) {
+						event.query().put("fail", "name too long (>12)");
 						redirect(event);
 					}
 /*

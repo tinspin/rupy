@@ -374,7 +374,7 @@ public class Deploy extends Service {
 				event.output().flush();
 			}
 		}
-/*
+
         public Class loadClass(String name) throws ClassNotFoundException {
             ClassLoader loader = null;
 
@@ -384,7 +384,8 @@ public class Deploy extends Service {
             catch(Throwable t) {
 		        t.printStackTrace();
             }
-
+/*
+ * TODO!!!
 		    if(loader instanceof Deploy.Archive) {
 		        try {
                     if (name.equals("java.io.FileOutputStream")) {
@@ -401,7 +402,7 @@ public class Deploy extends Service {
                     t.printStackTrace();
                 }
             }
-
+*/
             try {
                 return super.loadClass(name);
             }
@@ -411,7 +412,7 @@ public class Deploy extends Service {
 
             return null;
         }
-*/
+
 		protected Class findClass(String name) throws ClassNotFoundException {
 			Small small = null;
 
