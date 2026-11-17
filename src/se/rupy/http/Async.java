@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.NoRouteToHostException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.SelectionKey;
@@ -564,6 +565,19 @@ public class Async implements Runnable {
 				}
 				catch(Exception ex) {
 					e.printStackTrace();
+					ex.printStackTrace();
+				}
+			}
+			catch(NoRouteToHostException nrthe) {
+				try {
+					NoRouteToHostException ok = new NoRouteToHostException(host);
+					// java.net.NoRouteToHostException: No route to host
+					// Have JDK coders gone insane?!
+					ok.initCause(nrthe);
+					failure(ok);
+				}
+				catch(Exception ex) {
+					nrthe.printStackTrace();
 					ex.printStackTrace();
 				}
 			}
